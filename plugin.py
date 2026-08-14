@@ -448,7 +448,7 @@ class SmartPokePlugin(MaiBotPlugin):
         description="识别并响应 napcat 注入的戳一戳通知事件",
         mode=HookMode.BLOCKING,
         order=HookOrder.EARLY,
-        timeout_ms=3000,
+        timeout_ms=5000,  # 2026-08-14: 3000→5000 加固,MaiBot 框架 hook 调度偶发慢
         error_policy=ErrorPolicy.SKIP,
     )
     async def handle_poke_event(self, message: dict | None = None, **kwargs):
@@ -553,7 +553,7 @@ class SmartPokePlugin(MaiBotPlugin):
         description="观察普通群消息，按拟人化概率被勾起一次主动戳",
         mode=HookMode.OBSERVE,
         order=HookOrder.LATE,
-        timeout_ms=2000,
+        timeout_ms=5000,  # 2026-08-14: 2000→5000 加固,与 BLOCKING hook 保持一致
         error_policy=ErrorPolicy.SKIP,
     )
     async def observe_message_for_proactive(self, message: dict | None = None, **kwargs):
