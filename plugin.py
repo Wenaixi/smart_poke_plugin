@@ -119,16 +119,16 @@ class SmartPokePlugin(MaiBotPlugin):
         if self._shutting_down:
             try:
                 coro.close()
-            except Exception:
-                pass
+            except Exception as exc:
+                self.ctx.logger.debug("smart_poke: shutdown 中 close coroutine 失败 (label=%s): %s", label, exc)
             return None
 
         is_proactive = label == "proactive"
         if is_proactive and self._proactive_active_count >= PROACTIVE_TASK_QUEUE_LIMIT:
             try:
                 coro.close()
-            except Exception:
-                pass
+            except Exception as exc:
+                self.ctx.logger.debug("smart_poke: 并发上限时 close coroutine 失败 (label=%s): %s", label, exc)
             self.ctx.logger.debug(
                 "[proactive] 并发任务已达上限 %d，丢弃本次触发",
                 PROACTIVE_TASK_QUEUE_LIMIT,
