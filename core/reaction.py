@@ -421,9 +421,11 @@ class ReactionExecutor:
                 "temperature": cfg.llm_temperature,
             }
             model = cfg.llm_model.strip()
-            # llm_model 只会是 utils/replyer/planner（Literal 约束），直接作为任务槽位下发
+            # llm_model 只会是 utils/replyer/planner（Literal 约束），本意是模型任务名。
+            # MaiBot 1.2.5 起 SDK 的 model 参数被宿主当作具体模型名，
+            # 任务名必须经 task_name 传递，否则报「未找到名为 'planner' 的模型」。
             if model:
-                gen_kwargs["model"] = model
+                gen_kwargs["task_name"] = model
             # max_tokens=0 表示不覆盖、用 Host 模型配置
             if cfg.llm_max_tokens > 0:
                 gen_kwargs["max_tokens"] = cfg.llm_max_tokens
